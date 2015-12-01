@@ -11,21 +11,28 @@ var connection = db.createConnection({
 var app = express();
 app.use(bodyParser.json());
 
+//hardcoding user 1, to simulate being signed in as user 1
 app.use(function(req, res, next) {
     req.accountId = 1;
     next()
 })
 
-app.get('/AddressBook/:accountId', function(req, res) {
-    connection.query('select * from Account where id ='+ req.accountId,
+
+app.get('/AddressBooks', function(req, res) {
+    connection.query('select AddressBook.name as accountName,AddressBook.id as id from AddressBook where accountId ='+ req.accountId,
+    //req.accountId becomes the hard coded version of /AddressBooks/1 basically
         function(err, accountInfo) {
             if (err) {
                 console.log(err)
             }else if(accountInfo) {
-                console.log(accountInfo)
+                res.json(accountInfo)
             }
+            
         })
+        
 });
+
+
 
 // connection.end();
 
